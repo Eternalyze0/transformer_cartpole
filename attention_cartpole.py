@@ -26,7 +26,8 @@ class ReplayBuffer():
         return [x[3] for x in self.buffer]
     
     def sample(self, n):
-        mini_batch = random.sample(self.buffer, n)
+        # mini_batch = random.sample(self.buffer, n)
+        mini_batch = self.buffer
         s_lst, a_lst, r_lst, s_prime_lst, done_mask_lst = [], [], [], [], []
         
         for transition in mini_batch:
