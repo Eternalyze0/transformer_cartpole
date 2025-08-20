@@ -12,7 +12,7 @@ import model
 #Hyperparameters
 learning_rate = 0.0005
 gamma         = 0.98
-buffer_limit  = 32
+buffer_limit  = 50000
 batch_size    = 32
 
 class ReplayBuffer():
@@ -27,7 +27,9 @@ class ReplayBuffer():
     
     def sample(self, n):
         # mini_batch = random.sample(self.buffer, n)
-        mini_batch = self.buffer
+        i = random.randint(0, self.size()-batch_size)
+        mini_batch = list(self.buffer)[i:i+batch_size]
+        assert len(mini_batch) == batch_size
         s_lst, a_lst, r_lst, s_prime_lst, done_mask_lst = [], [], [], [], []
         
         for transition in mini_batch:
@@ -71,7 +73,7 @@ class Qnet(nn.Module):
             return out.argmax().item()
             
 def train(q, q_target, memory, optimizer):
-    for i in range(10):
+    for i in range(10*batch_size):
         s,a,r,s_prime,done_mask = memory.sample(batch_size)
 
         q_out = q(s)
